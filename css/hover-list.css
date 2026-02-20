@@ -1,0 +1,5 @@
+@media (hover: hover) {
+    [data-hover-background] { display: block; }
+    [data-hover-list] > * { transition: opacity 0.3s ease-in-out; }
+    [data-hover-list]:has(> :hover) > :not(:hover) { opacity: 0.4; }
+}
