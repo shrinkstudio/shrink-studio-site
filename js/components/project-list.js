@@ -11,6 +11,7 @@
       var paddingCollapsed = "2rem";
       var paddingExpanded = "4rem";
 
+      gsap.set(list, { opacity: 0 });
       gsap.set(list.querySelectorAll("[data-project-media]"), { y: "100%" });
 
       items.forEach(function (item, index) {
