@@ -26,6 +26,10 @@
 
         tls.push(tl);
 
+        if (index === 0) {
+          gsap.set(item, { paddingTop: paddingExpanded, paddingBottom: paddingExpanded });
+        }
+
         item.addEventListener("mouseenter", function () {
           tls[lastIndex].timeScale(3).reverse();
           lastIndex = index;
