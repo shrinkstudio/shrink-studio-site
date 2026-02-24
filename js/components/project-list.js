@@ -49,6 +49,18 @@
             duration: 0.2,
             ease: "power2.inOut",
           });
+
+          gsap.to(items, {
+            opacity: 0.5,
+            duration: 0.2,
+            ease: "power2.inOut",
+          });
+
+          gsap.to(item, {
+            opacity: 1,
+            duration: 0.2,
+            ease: "power2.inOut",
+          });
         });
       });
 
@@ -60,6 +72,7 @@
         gsap.to(items, {
           paddingTop: paddingCollapsed,
           paddingBottom: paddingCollapsed,
+          opacity: 1,
           duration: 0.2,
           ease: "power2.inOut",
         });
