@@ -8,8 +8,8 @@
       var lastIndex = 0;
       var tls = [];
 
-      var paddingCollapsed = "0.5rem";
-      var paddingExpanded = "2rem";
+      var paddingCollapsed = "2rem";
+      var paddingExpanded = "4rem";
 
       gsap.set(list.querySelectorAll("[data-project-media]"), { y: "100%" });
 
@@ -25,10 +25,6 @@
         });
 
         tls.push(tl);
-
-        if (index !== 0) {
-          gsap.set(item, { paddingTop: paddingCollapsed, paddingBottom: paddingCollapsed });
-        }
 
         item.addEventListener("mouseenter", function () {
           tls[lastIndex].timeScale(3).reverse();
@@ -48,6 +44,17 @@
             duration: 0.2,
             ease: "power2.inOut",
           });
+        });
+      });
+
+      list.addEventListener("mouseleave", function () {
+        tls[lastIndex].timeScale(3).reverse();
+
+        gsap.to(items, {
+          paddingTop: paddingCollapsed,
+          paddingBottom: paddingCollapsed,
+          duration: 0.2,
+          ease: "power2.inOut",
         });
       });
     });
