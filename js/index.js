@@ -6,7 +6,8 @@
     ];
     var components = [
         "components/hover-list.js",
-        "components/project-list.js"
+        "components/project-list.js",
+        "components/current-time.js"
     ];
     styles.forEach(function (path) {
         var l = document.createElement("link");
