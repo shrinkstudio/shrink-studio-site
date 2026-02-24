@@ -51,6 +51,8 @@
         });
       });
 
+      gsap.set(list, { opacity: 1 });
+
       list.addEventListener("mouseleave", function () {
         tls[lastIndex].timeScale(3).reverse();
 
