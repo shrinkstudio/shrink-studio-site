@@ -5,7 +5,8 @@
         "css/hover-list.css"
     ];
     var components = [
-        "components/hover-list.js"
+        "components/hover-list.js",
+        "components/project-list.js"
     ];
     styles.forEach(function (path) {
         var l = document.createElement("link");
