@@ -8,7 +8,8 @@
         "components/hover-list.js",
         "components/project-list.js",
         "components/current-time.js",
-        "components/magnetic-button.js"
+        "components/magnetic-button.js",
+        "components/footer-parallax.js"
     ];
     styles.forEach(function (path) {
         var l = document.createElement("link");
