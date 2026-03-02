@@ -9,7 +9,8 @@
         "components/project-list.js",
         "components/current-time.js",
         "components/magnetic-button.js",
-        "components/footer-parallax.js"
+        "components/footer-parallax.js",
+        "components/custom-cursor.js"
     ];
     styles.forEach(function (path) {
         var l = document.createElement("link");
