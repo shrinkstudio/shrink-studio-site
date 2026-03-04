@@ -96,6 +96,14 @@ function initSlider(root) {
   const setX = gsap.quickSetter(track, 'x', 'px');
   let collectionRect = collection.getBoundingClientRect();
 
+  // Parallax: build quickSetters for each item's parallax element
+  const parallaxData = items.map((slide) => {
+    const el = slide.querySelector('[data-gsap-slider-parallax]');
+    if (!el) return null;
+    const strength = parseFloat(el.getAttribute('data-gsap-slider-parallax')) || 50;
+    return { setter: gsap.quickSetter(el, 'x', 'px'), strength };
+  });
+
   function updateStatus(x) {
     if (x > maxX || x < minX) return;
 
@@ -120,6 +128,14 @@ function initSlider(root) {
       slide.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
       slide.setAttribute('aria-hidden', inView ? 'false' : 'true');
       slide.setAttribute('tabindex', i === activeIndex ? '0' : '-1');
+
+      // Parallax: shift image based on position within viewport
+      const p = parallaxData[i];
+      if (p) {
+        const center = collectionRect.left + collectionRect.width / 2;
+        const offset = (slideCenter + collectionRect.left - center) / collectionRect.width;
+        p.setter(offset * p.strength);
+      }
     });
 
     // Update controls
