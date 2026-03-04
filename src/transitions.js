@@ -20,10 +20,13 @@ import { initCurrentTime, destroyCurrentTime } from './current-time.js';
 import { initMagneticButtons, destroyMagneticButtons } from './magnetic-button.js';
 import { initFooterParallax, destroyFooterParallax } from './footer-parallax.js';
 import { initCustomCursor, destroyCustomCursor } from './custom-cursor.js';
+import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 if (typeof Flip !== 'undefined') gsap.registerPlugin(Flip);
+if (typeof Draggable !== 'undefined') gsap.registerPlugin(Draggable);
+if (typeof InertiaPlugin !== 'undefined') gsap.registerPlugin(InertiaPlugin);
 
 history.scrollRestoration = "manual";
 
@@ -79,6 +82,7 @@ function initBeforeEnterFunctions(next) {
   destroyMagneticButtons();
   destroyFooterParallax();
   destroyCustomCursor();
+  destroyGsapSliders();
 }
 
 function initAfterEnterFunctions(next) {
@@ -101,6 +105,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-magnetic-strength]'))              initMagneticButtons(nextPage);
   if (has('[data-footer-parallax]'))                initFooterParallax(nextPage);
   if (nextPage.querySelector('.cursor'))            initCustomCursor(nextPage);
+  if (has('[data-gsap-slider-init]'))               initGsapSliders(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Webflow IX2 reinit — fixes native nav dropdowns
