@@ -88,7 +88,7 @@ function initBeforeEnterFunctions(next) {
 function initAfterEnterFunctions(next) {
   nextPage = next || document;
 
-  // Nav is outside the barba container — scope to document
+  // Nav is inside the barba container — scope to document so we find it after transition
   if (document.querySelector('.nav'))               initNavScrollHide(document);
   if (has('[data-theme-toggle]'))                   initThemeToggle(nextPage);
   if (has('details'))                               initAccordions(nextPage);
@@ -107,6 +107,12 @@ function initAfterEnterFunctions(next) {
   if (nextPage.querySelector('.cursor'))            initCustomCursor(nextPage);
   if (has('[data-gsap-slider-init]'))               initGsapSliders(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
+
+  // Re-evaluate inline scripts inside the new container (Webflow embeds)
+  reinitScripts(nextPage);
+
+  // Re-trigger Webflow Code Components (e.g. Dither Background)
+  reinitWebflowComponents();
 
   // Webflow IX2 reinit — fixes native nav dropdowns
   if (window.Webflow && window.Webflow.ready) {
@@ -377,6 +383,26 @@ function resetPage(container) {
     lenis.resize();
     lenis.start();
   }
+}
+
+function reinitScripts(container) {
+  container.querySelectorAll('script').forEach(oldScript => {
+    const newScript = document.createElement('script');
+    [...oldScript.attributes].forEach(attr => {
+      newScript.setAttribute(attr.name, attr.value);
+    });
+    newScript.textContent = oldScript.textContent;
+    oldScript.parentNode.replaceChild(newScript, oldScript);
+  });
+}
+
+function reinitWebflowComponents() {
+  document.querySelectorAll('script[src*="shrink_studio_scripts"]').forEach(oldScript => {
+    const newScript = document.createElement('script');
+    newScript.src = oldScript.src;
+    oldScript.parentNode.insertBefore(newScript, oldScript.nextSibling);
+    oldScript.remove();
+  });
 }
 
 function initBarbaNavUpdate(data) {

@@ -22,7 +22,7 @@ export function initCustomCursor(scope) {
   var currentTarget = null;
   var lastText = "";
 
-  gsap.set(cursorItem, { xPercent: xOffset, yPercent: yOffset });
+  gsap.set(cursorItem, { position: 'fixed', top: 0, left: 0, xPercent: xOffset, yPercent: yOffset });
 
   xTo = gsap.quickTo(cursorItem, "x", { ease: "power3" });
   yTo = gsap.quickTo(cursorItem, "y", { ease: "power3" });
