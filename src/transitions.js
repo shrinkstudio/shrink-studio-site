@@ -21,12 +21,14 @@ import { initMagneticButtons, destroyMagneticButtons } from './magnetic-button.j
 import { initFooterParallax, destroyFooterParallax } from './footer-parallax.js';
 import { initCustomCursor, destroyCustomCursor } from './custom-cursor.js';
 import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
+import { initMarquees, destroyMarquees } from './marquee.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 if (typeof Flip !== 'undefined') gsap.registerPlugin(Flip);
 if (typeof Draggable !== 'undefined') gsap.registerPlugin(Draggable);
 if (typeof InertiaPlugin !== 'undefined') gsap.registerPlugin(InertiaPlugin);
+if (typeof Observer !== 'undefined') gsap.registerPlugin(Observer);
 
 history.scrollRestoration = "manual";
 
@@ -83,6 +85,7 @@ function initBeforeEnterFunctions(next) {
   destroyFooterParallax();
   destroyCustomCursor();
   destroyGsapSliders();
+  destroyMarquees();
 }
 
 function initAfterEnterFunctions(next) {
@@ -106,6 +109,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-footer-parallax]'))                initFooterParallax(nextPage);
   if (nextPage.querySelector('.cursor'))            initCustomCursor(nextPage);
   if (has('[data-gsap-slider-init]'))               initGsapSliders(nextPage);
+  if (has('[data-marquee-init]'))                   initMarquees(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
