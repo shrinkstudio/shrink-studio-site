@@ -22,6 +22,7 @@ import { initFooterParallax, destroyFooterParallax } from './footer-parallax.js'
 import { initCustomCursor, destroyCustomCursor } from './custom-cursor.js';
 import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
 import { initMarquees, destroyMarquees } from './marquee.js';
+import { initCopyClip, destroyCopyClip } from './copy-clip.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -86,6 +87,7 @@ function initBeforeEnterFunctions(next) {
   destroyCustomCursor();
   destroyGsapSliders();
   destroyMarquees();
+  destroyCopyClip();
 }
 
 function initAfterEnterFunctions(next) {
@@ -110,6 +112,7 @@ function initAfterEnterFunctions(next) {
   if (nextPage.querySelector('.cursor'))            initCustomCursor(nextPage);
   if (has('[data-gsap-slider-init]'))               initGsapSliders(nextPage);
   if (has('[data-marquee-init]'))                   initMarquees(nextPage);
+  if (has('[data-copy="trigger"]'))                 initCopyClip(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
