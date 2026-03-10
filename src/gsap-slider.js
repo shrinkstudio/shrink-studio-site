@@ -114,10 +114,10 @@ function initSlider(root) {
       const leftEdge = r.left - collectionRect.left;
       const slideCenter = leftEdge + r.width / 2;
       const inView = slideCenter > 0 && slideCenter < collectionRect.width;
-      const status = i === activeIndex ? 'active' : inView ? 'inview' : 'not-active';
+      const status = inView ? 'active' : 'not-active';
 
       slide.setAttribute('data-gsap-slider-item-status', status);
-      slide.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+      slide.setAttribute('aria-selected', inView ? 'true' : 'false');
       slide.setAttribute('aria-hidden', inView ? 'false' : 'true');
       slide.setAttribute('tabindex', i === activeIndex ? '0' : '-1');
     });
