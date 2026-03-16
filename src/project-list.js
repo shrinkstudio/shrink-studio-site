@@ -2,11 +2,15 @@
 // PROJECT LIST — Staggered media reveal on hover
 // -----------------------------------------
 
+const DESKTOP_MQ = window.matchMedia("(min-width: 992px)");
+
 let storedTimelines = [];
 let listeners = [];
 let initializedLists = [];
 
 export function initProjectList(scope) {
+  if (!DESKTOP_MQ.matches) return;
+
   scope = scope || document;
 
   scope.querySelectorAll("[data-project-list]").forEach(function (list) {
