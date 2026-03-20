@@ -24,6 +24,7 @@ import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
 import { initMarquees, destroyMarquees } from './marquee.js';
 import { initCopyClip, destroyCopyClip } from './copy-clip.js';
 import { initFormValidation, destroyFormValidation } from './form-validate.js';
+import { initCmsNest, destroyCmsNest } from './cms-nest.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -90,6 +91,7 @@ function initBeforeEnterFunctions(next) {
   destroyMarquees();
   destroyCopyClip();
   destroyFormValidation();
+  destroyCmsNest();
 }
 
 function initAfterEnterFunctions(next) {
@@ -116,6 +118,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-marquee-init]'))                   initMarquees(nextPage);
   if (has('[data-copy="trigger"]'))                 initCopyClip(nextPage);
   if (has('[data-form-validate]'))                  initFormValidation(nextPage);
+  if (has('[data-nest="target"]'))                  initCmsNest(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
