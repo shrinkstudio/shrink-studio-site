@@ -35,11 +35,11 @@ function getDirection(el, event) {
 function getOffset(direction) {
   // Returns x/y percentage offset for enter/leave direction
   switch (direction) {
-    case 0: return { x: '-110%', y: '0%' };   // left
-    case 1: return { x: '0%', y: '-110%' };   // top
-    case 2: return { x: '110%', y: '0%' };    // right
-    case 3: return { x: '0%', y: '110%' };    // bottom
-    default: return { x: '0%', y: '110%' };
+    case 0: return { x: -110, y: 0 };   // left
+    case 1: return { x: 0, y: -110 };   // top
+    case 2: return { x: 110, y: 0 };    // right
+    case 3: return { x: 0, y: 110 };    // bottom
+    default: return { x: 0, y: 110 };
   }
 }
 
@@ -90,7 +90,7 @@ function handleEnter(event) {
   var offset = getOffset(dir);
 
   gsap.killTweensOf(blob);
-  gsap.set(blob, { xPercent: parseFloat(offset.x), yPercent: parseFloat(offset.y) });
+  gsap.set(blob, { xPercent: offset.x, yPercent: offset.y });
   gsap.to(blob, {
     xPercent: 0,
     yPercent: 0,
@@ -109,8 +109,8 @@ function handleLeave(event) {
 
   gsap.killTweensOf(blob);
   gsap.to(blob, {
-    xPercent: parseFloat(offset.x),
-    yPercent: parseFloat(offset.y),
+    xPercent: offset.x,
+    yPercent: offset.y,
     duration: 0.4,
     ease: 'power2.in',
   });
