@@ -121,6 +121,7 @@ function handleLeave(event) {
 export function initServiceHover(scope) {
   scope = scope || document;
   var cards = scope.querySelectorAll('[data-service-hover]');
+  console.log('[service-hover] cards found:', cards.length);
   if (!cards.length) return;
 
   cards.forEach(function (card, i) {
