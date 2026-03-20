@@ -47,7 +47,9 @@ function ensureBlob(card, index) {
   var blob = card.querySelector('.service-hover__blob');
   if (blob) return blob;
 
-  var color = card.getAttribute('data-service-color') || '#A8E6CF';
+  // Read colour from attribute, or from a hidden text element bound to CMS
+  var colorEl = card.querySelector('[data-service-color]');
+  var color = (colorEl ? colorEl.textContent.trim() : card.getAttribute('data-service-color')) || '#A8E6CF';
   var pathIndex = index % blobPaths.length;
 
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
