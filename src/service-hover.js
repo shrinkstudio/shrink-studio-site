@@ -44,11 +44,15 @@ function handleHover(event) {
   // Offset from center — makes circle wider when entering from edges
   var offsetXFromCenter = Math.abs(((mouseX - cardCenterX) / (cardWidth / 2)) * 50);
 
+  // Scale base size by aspect ratio so circle covers tall cards
+  var aspectRatio = cardHeight / cardWidth;
+  var baseSize = Math.max(115, aspectRatio * 115);
+
   var circle = card.querySelector('.service__circle');
   if (circle) {
     circle.style.left = offsetXFromLeft.toFixed(1) + '%';
     circle.style.top = offsetYFromTop.toFixed(1) + '%';
-    circle.style.width = (115 + offsetXFromCenter.toFixed(1) * 2) + '%';
+    circle.style.width = (baseSize + offsetXFromCenter * 2) + '%';
   }
 }
 
