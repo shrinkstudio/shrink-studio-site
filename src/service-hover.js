@@ -46,7 +46,7 @@ function handleHover(event) {
 
   // Scale base size by aspect ratio so circle covers tall cards
   var aspectRatio = cardHeight / cardWidth;
-  var baseSize = Math.max(115, aspectRatio * 115);
+  var baseSize = Math.max(150, aspectRatio * 150);
 
   var circle = card.querySelector('.service__circle');
   if (circle) {
