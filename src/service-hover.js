@@ -3,16 +3,15 @@
 // -----------------------------------------
 // Attributes:
 //   [data-service-hover]          — the card element (hover target)
-//   [data-service-color]          — hidden text element inside card, textContent = hex colour from CMS
 //
 // Structure in Webflow:
-//   card [data-service-hover]
-//   ├── service-hover__circle     — the expanding circle (CSS handles scale)
-//   ├── ... card content ...
-//   └── T [data-service-color]    — hidden text block bound to CMS colour field
+//   card [data-service-hover]     — position: relative, overflow: hidden
+//   ├── service__circle-wrap
+//   │   └── service__circle       — the expanding circle (CSS handles scale)
+//   └── ... card content ...
 //
 // CSS required (add to Webflow custom code):
-//   .service-hover__circle {
+//   .service__circle {
 //     position: absolute;
 //     border-radius: 50%;
 //     pointer-events: none;
@@ -21,7 +20,7 @@
 //     transform: translate(-50%, -50%) scale(0) rotate(0.001deg);
 //     transition: transform 0.7s cubic-bezier(0.625, 0.05, 0, 1);
 //   }
-//   [data-service-hover]:hover .service-hover__circle {
+//   [data-service-hover]:hover .service__circle {
 //     transform: translate(-50%, -50%) scale(1) rotate(0.001deg);
 //   }
 
@@ -45,24 +44,11 @@ function handleHover(event) {
   // Offset from center — makes circle wider when entering from edges
   var offsetXFromCenter = Math.abs(((mouseX - cardCenterX) / (cardWidth / 2)) * 50);
 
-  var circle = card.querySelector('.service-hover__circle');
+  var circle = card.querySelector('.service__circle');
   if (circle) {
     circle.style.left = offsetXFromLeft.toFixed(1) + '%';
     circle.style.top = offsetYFromTop.toFixed(1) + '%';
     circle.style.width = (115 + offsetXFromCenter.toFixed(1) * 2) + '%';
-  }
-}
-
-function applyColor(card) {
-  var colorEl = card.querySelector('[data-service-color]');
-  if (!colorEl) return;
-
-  var color = colorEl.textContent.trim();
-  if (!color) return;
-
-  var circle = card.querySelector('.service-hover__circle');
-  if (circle) {
-    circle.style.backgroundColor = color;
   }
 }
 
@@ -72,7 +58,6 @@ export function initServiceHover(scope) {
   if (!cards.length) return;
 
   cards.forEach(function (card) {
-    applyColor(card);
     card.addEventListener('mouseenter', handleHover);
     card.addEventListener('mouseleave', handleHover);
     listeners.push(card);
