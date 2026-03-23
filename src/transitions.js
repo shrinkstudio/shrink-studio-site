@@ -198,7 +198,7 @@ function runPageLeaveAnimation(current, next) {
     width: "100%",
     zIndex: 3,
     willChange: "transform",
-    y: "calc(100vh + 1px)",
+    y: "101vh",
   });
 
   const tl = gsap.timeline({
