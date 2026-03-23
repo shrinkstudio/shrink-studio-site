@@ -21,7 +21,6 @@ import { initMagneticButtons, destroyMagneticButtons } from './magnetic-button.j
 import { initFooterParallax, destroyFooterParallax } from './footer-parallax.js';
 import { initCustomCursor, destroyCustomCursor } from './custom-cursor.js';
 import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
-import { initMarquees, destroyMarquees } from './marquee.js';
 import { initCopyClip, destroyCopyClip } from './copy-clip.js';
 import { initFormValidation, destroyFormValidation } from './form-validate.js';
 import { initCmsNest, destroyCmsNest } from './cms-nest.js';
@@ -90,7 +89,6 @@ function initBeforeEnterFunctions(next) {
   destroyFooterParallax();
   destroyCustomCursor();
   destroyGsapSliders();
-  destroyMarquees();
   destroyCopyClip();
   destroyFormValidation();
   destroyCmsNest();
@@ -119,7 +117,6 @@ function initAfterEnterFunctions(next) {
   if (has('[data-footer-parallax]'))                initFooterParallax(nextPage);
   if (nextPage.querySelector('.cursor'))            initCustomCursor(nextPage);
   if (has('[data-gsap-slider-init]'))               initGsapSliders(nextPage);
-  if (has('[data-marquee-init]'))                   initMarquees(nextPage);
   if (has('[data-copy="trigger"]'))                 initCopyClip(nextPage);
   if (has('[data-form-validate]'))                  initFormValidation(nextPage);
   if (has('[data-nest="target"]'))                  initCmsNest(nextPage);
