@@ -130,9 +130,12 @@ function initAfterEnterFunctions(next) {
   // Re-trigger Webflow Code Components (e.g. Dither Background)
   reinitWebflowComponents();
 
-  // Webflow IX2 reinit — fixes native nav dropdowns
-  if (window.Webflow && window.Webflow.ready) {
+  // Webflow IX2 reinit
+  if (window.Webflow) {
+    window.Webflow.destroy();
     window.Webflow.ready();
+    window.Webflow.require('ix2').init();
+    document.dispatchEvent(new Event('readystatechange'));
   }
 
   if (hasLenis) {
@@ -414,6 +417,19 @@ function reinitScripts(container) {
 
 let componentScriptSrc = null;
 
+function hydrateShadowRoots(container) {
+  // Declarative shadow DOM templates aren't parsed when inserted via JS.
+  // Manually attach shadow roots so Code Components can find their mount points.
+  container.querySelectorAll('template[shadowrootmode]').forEach(tpl => {
+    const mode = tpl.getAttribute('shadowrootmode') || 'open';
+    const host = tpl.parentElement;
+    if (!host || host.shadowRoot) return;
+    const shadow = host.attachShadow({ mode });
+    shadow.append(tpl.content);
+    tpl.remove();
+  });
+}
+
 function reinitWebflowComponents() {
   // On first run, find and cache the Code Component script src
   if (!componentScriptSrc) {
@@ -422,6 +438,9 @@ function reinitWebflowComponents() {
   }
 
   if (!componentScriptSrc) return;
+
+  // Hydrate declarative shadow DOM in the new container
+  hydrateShadowRoots(document);
 
   // Remove any existing Code Component script
   document.querySelectorAll('script[src*="shrink_studio_scripts"]').forEach(s => s.remove());
