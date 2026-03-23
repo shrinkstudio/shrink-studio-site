@@ -168,12 +168,39 @@ function setupForm(formContainer) {
     return allValid;
   }
 
+  function sendToClickUp() {
+    var getValue = function (name) {
+      var el = form.querySelector('[name="' + name + '"]');
+      return el ? el.value.trim() : '';
+    };
+
+    var payload = {
+      name: getValue('name'),
+      company: getValue('company'),
+      email: getValue('email'),
+      industry: getValue('industry'),
+      projectType: getValue('project-type'),
+      timeline: getValue('timeline'),
+      website: getValue('website'),
+      budget: getValue('budget'),
+      referralSource: getValue('referral-source'),
+    };
+
+    // Fire and forget — don't block the Webflow submit
+    fetch('https://shrink-studio-api.vercel.app/api/form-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(function () {});
+  }
+
   function handleSubmit() {
     if (validateAndStartAll()) {
       if (isSpam()) {
         alert('Form submitted too quickly. Please try again.');
         return;
       }
+      sendToClickUp();
       realSubmitInput.click();
     }
   }
