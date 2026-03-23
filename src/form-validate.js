@@ -274,8 +274,11 @@ function setupForm(formContainer) {
     }
   });
 
-  // Submit handlers
-  addListener(dataSubmit, 'click', handleSubmit);
+  // Submit handlers — stop propagation so realSubmitInput.click() doesn't re-trigger
+  addListener(dataSubmit, 'click', function (e) {
+    if (e.target === realSubmitInput || realSubmitInput.contains(e.target)) return;
+    handleSubmit();
+  });
 
   addListener(form, 'keydown', function (event) {
     if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
