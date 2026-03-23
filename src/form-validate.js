@@ -168,7 +168,11 @@ function setupForm(formContainer) {
     return allValid;
   }
 
+  var clickUpSent = false;
+
   function sendToClickUp() {
+    if (clickUpSent) return;
+    clickUpSent = true;
     var getValue = function (dataName) {
       var el = form.querySelector('[data-name="' + dataName + '"]');
       return el ? el.value.trim() : '';
