@@ -415,13 +415,24 @@ function reinitScripts(container) {
   });
 }
 
+let componentScriptSrc = null;
+
 function reinitWebflowComponents() {
-  document.querySelectorAll('script[src*="shrink_studio_scripts"]').forEach(oldScript => {
-    const newScript = document.createElement('script');
-    newScript.src = oldScript.src;
-    oldScript.parentNode.insertBefore(newScript, oldScript.nextSibling);
-    oldScript.remove();
-  });
+  // On first run, find and cache the Code Component script src
+  if (!componentScriptSrc) {
+    const script = document.querySelector('script[src*="shrink_studio_scripts"]');
+    if (script) componentScriptSrc = script.src;
+  }
+
+  if (!componentScriptSrc) return;
+
+  // Remove any existing Code Component script
+  document.querySelectorAll('script[src*="shrink_studio_scripts"]').forEach(s => s.remove());
+
+  // Re-inject into head so it re-executes and mounts components in the new container
+  const newScript = document.createElement('script');
+  newScript.src = componentScriptSrc;
+  document.head.appendChild(newScript);
 }
 
 function initBarbaNavUpdate(data) {
