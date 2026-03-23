@@ -169,21 +169,21 @@ function setupForm(formContainer) {
   }
 
   function sendToClickUp() {
-    var getValue = function (name) {
-      var el = form.querySelector('[name="' + name + '"]');
+    var getValue = function (dataName) {
+      var el = form.querySelector('[data-name="' + dataName + '"]');
       return el ? el.value.trim() : '';
     };
 
     var payload = {
-      name: getValue('name'),
-      company: getValue('company'),
-      email: getValue('email'),
-      industry: getValue('industry'),
-      projectType: getValue('project-type'),
-      timeline: getValue('timeline'),
-      website: getValue('website'),
-      budget: getValue('budget'),
-      referralSource: getValue('referral-source'),
+      name: getValue('Name'),
+      company: getValue('Company Name'),
+      email: getValue('Email'),
+      industry: getValue('Industry'),
+      projectType: getValue('Project Type'),
+      timeline: getValue('Launch timeline'),
+      website: getValue('Current website'),
+      budget: getValue('Budget'),
+      referralSource: getValue('Where did you find us?'),
     };
 
     // Fire and forget — don't block the Webflow submit
