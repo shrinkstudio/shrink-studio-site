@@ -26,6 +26,7 @@ import { initCopyClip, destroyCopyClip } from './copy-clip.js';
 import { initFormValidation, destroyFormValidation } from './form-validate.js';
 import { initCmsNest, destroyCmsNest } from './cms-nest.js';
 import { initServiceHover, destroyServiceHover } from './service-hover.js';
+import { initTestimonialSlider, destroyTestimonialSlider } from './testimonial-slider.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -94,6 +95,7 @@ function initBeforeEnterFunctions(next) {
   destroyFormValidation();
   destroyCmsNest();
   destroyServiceHover();
+  destroyTestimonialSlider();
 }
 
 function initAfterEnterFunctions(next) {
@@ -122,6 +124,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-form-validate]'))                  initFormValidation(nextPage);
   if (has('[data-nest="target"]'))                  initCmsNest(nextPage);
   if (has('[data-service-hover]'))                  initServiceHover(nextPage);
+  if (has('[data-testimonial-wrap]'))               initTestimonialSlider(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
