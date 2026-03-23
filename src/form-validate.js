@@ -168,43 +168,12 @@ function setupForm(formContainer) {
     return allValid;
   }
 
-  var clickUpSent = false;
-
-  function sendToClickUp() {
-    if (clickUpSent) return;
-    clickUpSent = true;
-    var getValue = function (dataName) {
-      var el = form.querySelector('[data-name="' + dataName + '"]');
-      return el ? el.value.trim() : '';
-    };
-
-    var payload = {
-      name: getValue('Name'),
-      company: getValue('Company Name'),
-      email: getValue('Email'),
-      industry: getValue('Industry'),
-      projectType: getValue('Project Type'),
-      timeline: getValue('Launch timeline'),
-      website: getValue('Current website'),
-      budget: getValue('Budget'),
-      referralSource: getValue('Where did you find us?'),
-    };
-
-    // Fire and forget — don't block the Webflow submit
-    fetch('https://shrink-studio-api.vercel.app/api/form-submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    }).catch(function () {});
-  }
-
   function handleSubmit() {
     if (validateAndStartAll()) {
       if (isSpam()) {
         alert('Form submitted too quickly. Please try again.');
         return;
       }
-      sendToClickUp();
       realSubmitInput.click();
     }
   }
@@ -274,11 +243,8 @@ function setupForm(formContainer) {
     }
   });
 
-  // Submit handlers — stop propagation so realSubmitInput.click() doesn't re-trigger
-  addListener(dataSubmit, 'click', function (e) {
-    if (e.target === realSubmitInput || realSubmitInput.contains(e.target)) return;
-    handleSubmit();
-  });
+  // Submit handlers
+  addListener(dataSubmit, 'click', handleSubmit);
 
   addListener(form, 'keydown', function (event) {
     if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
