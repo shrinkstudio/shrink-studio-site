@@ -123,9 +123,7 @@ function initTestimonialComponent(wrap) {
 
           if (slide.image) {
             gsap.set(slide.image, {
-              clipPath: isActive
-                ? 'inset(0% 0% 0% 0%)'
-                : 'inset(50% 50% 50% 50%)',
+              autoAlpha: isActive ? 1 : 0,
             });
           }
         },
@@ -171,8 +169,8 @@ function initTestimonialComponent(wrap) {
     gsap.set(incomingSlide.item, { autoAlpha: 1, pointerEvents: 'auto' });
     gsap.set(incomingLines, { yPercent: 110 });
 
-    if (incomingSlide.image) gsap.set(incomingSlide.image, { clipPath: 'inset(50% 50% 50% 50%)' });
-    if (outgoingSlide.image) gsap.set(outgoingSlide.image, { clipPath: 'inset(0% 0% 0% 0%)' });
+    if (incomingSlide.image) gsap.set(incomingSlide.image, { autoAlpha: 0 });
+    if (outgoingSlide.image) gsap.set(outgoingSlide.image, { autoAlpha: 1 });
 
     tl.to(outgoingLines, {
       yPercent: -110,
@@ -183,9 +181,9 @@ function initTestimonialComponent(wrap) {
 
     if (outgoingSlide.image) {
       tl.to(outgoingSlide.image, {
-        clipPath: 'inset(50% 50% 50% 50%)',
-        duration: 0.6,
-        ease: 'power4.inOut',
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: 'power2.inOut',
       }, 0);
     }
 
@@ -198,9 +196,9 @@ function initTestimonialComponent(wrap) {
 
     if (incomingSlide.image) {
       tl.to(incomingSlide.image, {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        duration: 0.75,
-        ease: 'power4.inOut',
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
       }, '<');
     }
 
