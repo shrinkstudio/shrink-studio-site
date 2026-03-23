@@ -131,12 +131,10 @@ function initAfterEnterFunctions(next) {
   reinitWebflowComponents();
 
   // Webflow IX2 reinit
-  if (window.Webflow && window.Webflow.ready) {
+  if (window.Webflow) {
+    window.Webflow.destroy();
     window.Webflow.ready();
-    try {
-      var ix2 = window.Webflow.require('ix2');
-      if (ix2 && ix2.init) ix2.init();
-    } catch (e) {}
+    window.Webflow.require('ix2').init();
     document.dispatchEvent(new Event('readystatechange'));
   }
 
