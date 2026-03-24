@@ -34,6 +34,7 @@ if (typeof Flip !== 'undefined') gsap.registerPlugin(Flip);
 if (typeof Draggable !== 'undefined') gsap.registerPlugin(Draggable);
 if (typeof InertiaPlugin !== 'undefined') gsap.registerPlugin(InertiaPlugin);
 if (typeof Observer !== 'undefined') gsap.registerPlugin(Observer);
+if (typeof SplitText !== 'undefined') gsap.registerPlugin(SplitText);
 
 history.scrollRestoration = "manual";
 
