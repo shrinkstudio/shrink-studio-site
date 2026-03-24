@@ -1,86 +1,59 @@
 // -----------------------------------------
-// WORD SCATTER — Scroll-driven word drift
-// Wraps words in spans, randomly assigns drift
-// directions, animates with ScrollTrigger scrub
+// HIGHLIGHT TEXT — Scroll-driven character reveal
+// Based on Osmo highlight text effect
 // -----------------------------------------
 // Attributes:
-//   [data-word-scatter]            — root wrapper
-//   [data-word-scatter-text]       — paragraph/text element to split
-//   [data-word-scatter-intensity]  — optional multiplier (default: 1)
+//   [data-highlight-text]              — target heading/text element
+//   [data-highlight-scroll-start]      — optional ScrollTrigger start (default: "top 90%")
+//   [data-highlight-scroll-end]        — optional ScrollTrigger end (default: "center 40%")
+//   [data-highlight-fade]              — optional base opacity (default: 0.2)
+//   [data-highlight-stagger]           — optional stagger value (default: 0.1)
 
-let instances = [];
-
-const driftConfig = [
-  { pad: '0.8em', x: '-0.8em' },
-  { pad: '1.6em', x: '1.6em' },
-  { pad: '2.4em', x: '-2.4em' },
-];
+let splits = [];
 
 function initWordScatter(scope) {
   scope = scope || document;
-  var roots = scope.querySelectorAll('[data-word-scatter]');
-  if (!roots.length) return;
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  var targets = scope.querySelectorAll('[data-highlight-text]');
+  if (!targets.length) return;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || typeof SplitText === 'undefined') return;
 
-  roots.forEach(function (root) {
-    var textEl = root.querySelector('[data-word-scatter-text]');
-    if (!textEl) return;
+  targets.forEach(function (heading) {
+    var scrollStart = heading.getAttribute('data-highlight-scroll-start') || 'top 90%';
+    var scrollEnd = heading.getAttribute('data-highlight-scroll-end') || 'center 40%';
+    var fadedValue = parseFloat(heading.getAttribute('data-highlight-fade')) || 0.2;
+    var staggerValue = parseFloat(heading.getAttribute('data-highlight-stagger')) || 0.1;
 
-    var intensity = parseFloat(root.getAttribute('data-word-scatter-intensity')) || 1;
-
-    // Wrap each word in a span
-    var text = textEl.textContent;
-    textEl.innerHTML = text
-      .split(' ')
-      .map(function (word) { return '<span style="display:inline-block">' + word + '</span>'; })
-      .join(' ');
-
-    var words = textEl.querySelectorAll('span');
-    var triggers = [];
-
-    words.forEach(function (word) {
-      // Randomly assign a drift group (0 = no drift, 1-3 = drift)
-      var group = Math.floor(Math.random() * 4);
-      if (group === 0) return;
-
-      var config = driftConfig[group - 1];
-      var padDir = parseFloat(config.x) < 0 ? 'padding-left' : 'padding-right';
-      var padAmount = parseFloat(config.pad) * intensity + 'em';
-
-      word.style[padDir] = padAmount;
-      word.style.willChange = 'transform';
-      word.setAttribute('data-word-scatter-group', group);
-
-      var xVal = parseFloat(config.x) * intensity + 'em';
-
-      gsap.to(word, {
-        x: xVal,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: word,
-          start: 'top 80%',
-          end: 'bottom 60%',
-          scrub: 0.2,
-        },
-      });
-
-      var st = ScrollTrigger.getAll();
-      triggers.push(st[st.length - 1]);
+    var split = new SplitText(heading, {
+      type: 'words, chars',
+      autoSplit: true,
+      onSplit: function (self) {
+        var ctx = gsap.context(function () {
+          gsap.timeline({
+            scrollTrigger: {
+              scrub: true,
+              trigger: heading,
+              start: scrollStart,
+              end: scrollEnd,
+            },
+          }).from(self.chars, {
+            autoAlpha: fadedValue,
+            stagger: staggerValue,
+            ease: 'linear',
+          });
+        });
+        return ctx;
+      },
     });
 
-    instances.push({ root: root, textEl: textEl, originalText: text, triggers: triggers });
+    splits.push(split);
   });
 }
 
 function destroyWordScatter() {
-  instances.forEach(function (inst) {
-    // Kill ScrollTriggers
-    inst.triggers.forEach(function (st) { st.kill(); });
-
-    // Restore original text
-    inst.textEl.textContent = inst.originalText;
+  splits.forEach(function (split) {
+    if (split && split.revert) split.revert();
   });
-  instances = [];
+  splits = [];
 }
 
 export { initWordScatter, destroyWordScatter };

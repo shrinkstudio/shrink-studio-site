@@ -124,7 +124,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-nest="target"]'))                  initCmsNest(nextPage);
   if (has('[data-service-hover]'))                  initServiceHover(nextPage);
   if (has('[data-testimonial-wrap]'))               initTestimonialSlider(nextPage);
-  if (has('[data-word-scatter]'))                   initWordScatter(nextPage);
+  if (has('[data-highlight-text]'))                  initWordScatter(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
