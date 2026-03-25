@@ -131,6 +131,9 @@ function initAfterEnterFunctions(next) {
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
   reinitScripts(nextPage);
 
+  // Hydrate declarative shadow DOM for Webflow Code Components (e.g. DitherBackground)
+  hydrateShadowRoots(nextPage);
+
   // Re-trigger Webflow Code Components (e.g. Dither Background)
   reinitWebflowComponents();
 
@@ -413,6 +416,22 @@ function reinitScripts(container) {
     });
     newScript.textContent = oldScript.textContent;
     oldScript.parentNode.replaceChild(newScript, oldScript);
+  });
+}
+
+function hydrateShadowRoots(container) {
+  const templates = container.querySelectorAll('template[shadowrootmode]');
+  templates.forEach(template => {
+    try {
+      const parent = template.parentElement;
+      if (!parent || parent.shadowRoot) return; // already hydrated
+      const mode = template.getAttribute('shadowrootmode') || 'open';
+      const shadow = parent.attachShadow({ mode });
+      shadow.appendChild(template.content.cloneNode(true));
+      template.remove();
+    } catch (e) {
+      console.warn('[hydrateShadowRoots] Failed to hydrate:', e);
+    }
   });
 }
 
