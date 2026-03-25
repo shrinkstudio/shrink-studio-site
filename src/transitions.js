@@ -131,8 +131,7 @@ function initAfterEnterFunctions(next) {
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
   reinitScripts(nextPage);
 
-  // Hydrate declarative shadow DOM for Code Components, then re-trigger script
-  hydrateCodeIslands(nextPage);
+  // Re-trigger Webflow Code Components (e.g. Dither Background)
   reinitWebflowComponents();
 
   // Webflow IX2 reinit — fixes native nav dropdowns
@@ -414,26 +413,6 @@ function reinitScripts(container) {
     });
     newScript.textContent = oldScript.textContent;
     oldScript.parentNode.replaceChild(newScript, oldScript);
-  });
-}
-
-function hydrateCodeIslands(container) {
-  if (typeof Element.prototype.setHTMLUnsafe !== 'function') return;
-
-  const islands = container.querySelectorAll('code-island');
-  if (!islands.length) return;
-
-  const processed = new Set();
-  islands.forEach(island => {
-    if (island.shadowRoot) return; // already hydrated (direct page load)
-    const wrapper = island.parentElement;
-    if (!wrapper || processed.has(wrapper)) return;
-    processed.add(wrapper);
-    try {
-      wrapper.setHTMLUnsafe(wrapper.innerHTML);
-    } catch (e) {
-      console.warn('[hydrateCodeIslands]', e);
-    }
   });
 }
 
