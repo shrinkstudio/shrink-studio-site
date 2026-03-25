@@ -420,17 +420,13 @@ function reinitScripts(container) {
 function hydrateCodeIslands(container) {
   if (typeof Element.prototype.setHTMLUnsafe !== 'function') return;
 
-  const islands = container.querySelectorAll('code-island');
-  if (!islands.length) return;
-
-  const processed = new Set();
-  islands.forEach(island => {
+  container.querySelectorAll('code-island').forEach(island => {
     if (island.shadowRoot) return; // already hydrated (direct page load)
-    const wrapper = island.parentElement;
-    if (!wrapper || processed.has(wrapper)) return;
-    processed.add(wrapper);
     try {
-      wrapper.setHTMLUnsafe(wrapper.innerHTML);
+      const temp = document.createElement('div');
+      temp.setHTMLUnsafe(island.outerHTML);
+      const hydrated = temp.querySelector('code-island');
+      if (hydrated) island.replaceWith(hydrated);
     } catch (e) {
       console.warn('[hydrateCodeIslands]', e);
     }
