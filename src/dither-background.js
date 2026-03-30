@@ -227,7 +227,7 @@ function createInstance(el) {
 
   // Canvas
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;';
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;opacity:0;transition:opacity 0.6s ease;';
   el.style.position = 'relative';
   el.insertBefore(canvas, el.firstChild);
 
@@ -300,6 +300,7 @@ function createInstance(el) {
   // Animation loop
   const startTime = performance.now();
   let raf = 0;
+  let revealed = false;
 
   function frame() {
     raf = requestAnimationFrame(frame);
@@ -337,6 +338,12 @@ function createInstance(el) {
     gl.uniform1f(ditherU.uColorNum, cfg.colorNum);
     gl.uniform1f(ditherU.uPixelSize, cfg.pixelSize);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Fade in after first complete frame
+    if (!revealed) {
+      revealed = true;
+      requestAnimationFrame(() => { canvas.style.opacity = '1'; });
+    }
   }
 
   raf = requestAnimationFrame(frame);
