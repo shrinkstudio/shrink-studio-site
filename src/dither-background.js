@@ -22,6 +22,9 @@ uniform float uWaveFrequency;
 uniform float uWaveAmplitude;
 uniform vec3 uWaveColor;
 uniform vec3 uBgColor;
+uniform vec2 uMousePos;
+uniform int uEnableMouse;
+uniform float uMouseRadius;
 out vec4 fragColor;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
@@ -71,6 +74,12 @@ void main() {
   vec2 uv = gl_FragCoord.xy / uResolution - 0.5;
   uv.x *= uResolution.x / uResolution.y;
   float f = pattern(uv);
+  if (uEnableMouse == 1) {
+    vec2 mouseNDC = (uMousePos / uResolution - 0.5) * vec2(1.0, -1.0);
+    mouseNDC.x *= uResolution.x / uResolution.y;
+    float dist = length(uv - mouseNDC);
+    f -= 0.5 * (1.0 - smoothstep(0.0, uMouseRadius, dist));
+  }
   fragColor = vec4(mix(uBgColor, uWaveColor, f), 1.0);
 }`;
 
@@ -185,6 +194,7 @@ export function destroyDitherBackground() {
   instances.forEach(inst => {
     cancelAnimationFrame(inst.raf);
     inst.ro.disconnect();
+    inst.canvas.removeEventListener('pointermove', inst.onPointer);
     const gl = inst.gl;
     gl.deleteProgram(inst.waveProg);
     gl.deleteProgram(inst.ditherProg);
@@ -211,11 +221,13 @@ function createInstance(el) {
     bgColor:     hexToRgb(d.ditherBgColor        || '#000000'),
     colorNum:    parseFloat(d.ditherColorNum)     || 4,
     pixelSize:   parseFloat(d.ditherPixelSize)    || 2,
+    mouse:       d.ditherMouse !== 'false',
+    mouseRadius: parseFloat(d.ditherMouseRadius)  || 1,
   };
 
   // Canvas
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;';
   el.style.position = 'relative';
   el.insertBefore(canvas, el.firstChild);
 
@@ -234,7 +246,7 @@ function createInstance(el) {
 
   const waveU = getUniforms(gl, waveProg, [
     'uResolution', 'uTime', 'uWaveSpeed', 'uWaveFrequency', 'uWaveAmplitude',
-    'uWaveColor', 'uBgColor'
+    'uWaveColor', 'uBgColor', 'uMousePos', 'uEnableMouse', 'uMouseRadius'
   ]);
   const ditherU = getUniforms(gl, ditherProg, [
     'uTexture', 'uResolution', 'uColorNum', 'uPixelSize'
@@ -267,6 +279,16 @@ function createInstance(el) {
 
   resize();
 
+  // Mouse tracking
+  const mouse = { x: 0, y: 0 };
+  const onPointer = (e) => {
+    if (!cfg.mouse) return;
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  };
+  canvas.addEventListener('pointermove', onPointer);
+
   // Attribute setup helper
   function bindQuad(program) {
     const loc = gl.getAttribLocation(program, 'aPosition');
@@ -298,6 +320,9 @@ function createInstance(el) {
     gl.uniform1f(waveU.uWaveAmplitude, cfg.amplitude);
     gl.uniform3f(waveU.uWaveColor, cfg.color[0], cfg.color[1], cfg.color[2]);
     gl.uniform3f(waveU.uBgColor, cfg.bgColor[0], cfg.bgColor[1], cfg.bgColor[2]);
+    gl.uniform2f(waveU.uMousePos, mouse.x, mouse.y);
+    gl.uniform1i(waveU.uEnableMouse, cfg.mouse ? 1 : 0);
+    gl.uniform1f(waveU.uMouseRadius, cfg.mouseRadius);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     // Pass 2: dither → screen
@@ -320,5 +345,5 @@ function createInstance(el) {
   const ro = new ResizeObserver(() => resize());
   ro.observe(el);
 
-  return { canvas, gl, waveProg, ditherProg, quadBuf, fbTex, fb, raf, ro };
+  return { canvas, gl, waveProg, ditherProg, quadBuf, fbTex, fb, raf, ro, onPointer };
 }
