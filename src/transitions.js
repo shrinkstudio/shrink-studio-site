@@ -27,6 +27,7 @@ import { initCmsNest, destroyCmsNest } from './cms-nest.js';
 import { initServiceHover, destroyServiceHover } from './service-hover.js';
 import { initTestimonialSlider, destroyTestimonialSlider } from './testimonial-slider.js';
 import { initWordScatter, destroyWordScatter } from './word-scatter.js';
+import { initDitherBackground, destroyDitherBackground } from './dither-background.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -97,6 +98,7 @@ function initBeforeEnterFunctions(next) {
   destroyServiceHover();
   destroyTestimonialSlider();
   destroyWordScatter();
+  destroyDitherBackground();
 }
 
 function initAfterEnterFunctions(next) {
@@ -126,13 +128,11 @@ function initAfterEnterFunctions(next) {
   if (has('[data-service-hover]'))                  initServiceHover(nextPage);
   if (has('[data-testimonial-wrap]'))               initTestimonialSlider(nextPage);
   if (has('[data-highlight-text]'))                  initWordScatter(nextPage);
+  if (has('[data-dither-background]'))              initDitherBackground(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
   reinitScripts(nextPage);
-
-  // Re-trigger Webflow Code Components (e.g. Dither Background)
-  reinitWebflowComponents();
 
   // Webflow IX2 reinit — fixes native nav dropdowns
   if (window.Webflow && window.Webflow.ready) {
@@ -414,26 +414,6 @@ function reinitScripts(container) {
     newScript.textContent = oldScript.textContent;
     oldScript.parentNode.replaceChild(newScript, oldScript);
   });
-}
-
-let componentScriptSrc = null;
-
-function reinitWebflowComponents() {
-  // On first run, find and cache the Code Component script src
-  if (!componentScriptSrc) {
-    const script = document.querySelector('script[src*="shrink_studio_scripts"]');
-    if (script) componentScriptSrc = script.src;
-  }
-
-  if (!componentScriptSrc) return;
-
-  // Remove any existing Code Component script
-  document.querySelectorAll('script[src*="shrink_studio_scripts"]').forEach(s => s.remove());
-
-  // Re-inject into head so it re-executes and mounts components in the new container
-  const newScript = document.createElement('script');
-  newScript.src = componentScriptSrc;
-  document.head.appendChild(newScript);
 }
 
 function initBarbaNavUpdate(data) {
