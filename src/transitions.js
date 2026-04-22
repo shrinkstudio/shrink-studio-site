@@ -24,7 +24,6 @@ import { initGsapSliders, destroyGsapSliders } from './gsap-slider.js';
 import { initCopyClip, destroyCopyClip } from './copy-clip.js';
 import { initFormValidation, destroyFormValidation } from './form-validate.js';
 import { initCmsNest, destroyCmsNest } from './cms-nest.js';
-import { initServiceHover, destroyServiceHover } from './service-hover.js';
 import { initTestimonialSlider, destroyTestimonialSlider } from './testimonial-slider.js';
 import { initWordScatter, destroyWordScatter } from './word-scatter.js';
 import { initDitherBackground, destroyDitherBackground } from './dither-background.js';
@@ -97,7 +96,6 @@ function initBeforeEnterFunctions(next) {
   destroyCopyClip();
   destroyFormValidation();
   destroyCmsNest();
-  destroyServiceHover();
   destroyTestimonialSlider();
   destroyWordScatter();
   destroyDitherBackground();
@@ -129,7 +127,6 @@ function initAfterEnterFunctions(next) {
   if (has('[data-copy="trigger"]'))                 initCopyClip(nextPage);
   if (has('[data-form-validate]'))                  initFormValidation(nextPage);
   if (has('[data-nest="target"]'))                  initCmsNest(nextPage);
-  if (has('[data-service-hover]'))                  initServiceHover(nextPage);
   if (has('[data-testimonial-wrap]'))               initTestimonialSlider(nextPage);
   if (has('[data-highlight-text]'))                  initWordScatter(nextPage);
   if (has('[data-dither-background]'))              initDitherBackground(nextPage);
