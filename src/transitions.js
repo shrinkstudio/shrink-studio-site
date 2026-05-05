@@ -29,6 +29,7 @@ import { initWordScatter, destroyWordScatter } from './word-scatter.js';
 import { initDitherBackground, destroyDitherBackground } from './dither-background.js';
 import { initContentReveal, destroyContentReveal } from './content-reveal.js';
 import { initSplitText, destroySplitText } from './split-text.js';
+import { initDotBends, destroyDotBends } from './dot-bends.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -101,6 +102,7 @@ function initBeforeEnterFunctions(next) {
   destroyDitherBackground();
   destroyContentReveal();
   destroySplitText();
+  destroyDotBends();
 }
 
 function initAfterEnterFunctions(next) {
@@ -132,6 +134,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-dither-background]'))              initDitherBackground(nextPage);
   if (has('[data-reveal-group]'))                   initContentReveal(nextPage);
   if (has('[data-split="heading"]'))                initSplitText(nextPage);
+  if (has('[data-dot-bends]'))                     initDotBends(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
