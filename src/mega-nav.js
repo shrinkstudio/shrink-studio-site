@@ -523,6 +523,13 @@ export function initMegaNav(scope) {
         state.mobileMenuOpen = false;
         state.mobilePanelActive = null;
         document.body.style.overflow = '';
+        // Clear all inline styles left by mobile animations on panels + fade items
+        panels.forEach((p) => {
+          gsap.set(p, { clearProps: 'all' });
+          gsap.set(getFade(p), { clearProps: 'all' });
+        });
+        gsap.set(dropContainer, { clearProps: 'all' });
+        gsap.set(backdrop, { clearProps: 'all' });
         resetDesktop();
       }
       if (!was && state.isMobile) {
