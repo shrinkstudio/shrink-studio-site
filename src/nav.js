@@ -1,5 +1,6 @@
 // -----------------------------------------
 // NAV — Hide on scroll down, show on scroll up
+// + Scroll shrink (data-nav-scrolled)
 // Uses Lenis scroll events when available, falls back to native
 // -----------------------------------------
 
@@ -7,6 +8,8 @@ let nav = null;
 let lastScrollY = 0;
 let isHidden = false;
 let scrollThreshold = 50; // px of scroll before hiding
+let shrinkThreshold = 10; // px before shrink kicks in
+let isScrolled = false;
 let tween = null;
 let navResizeObserver = null;
 
@@ -14,6 +17,19 @@ function onScroll({ scroll, direction }) {
   if (!nav) return;
 
   const currentY = typeof scroll === 'number' ? scroll : window.scrollY;
+
+  // Scroll shrink — toggle data-nav-scrolled
+  const shouldShrink = currentY > shrinkThreshold;
+  if (shouldShrink !== isScrolled) {
+    isScrolled = shouldShrink;
+    nav.setAttribute('data-nav-scrolled', isScrolled ? 'true' : 'false');
+  }
+
+  // Don't hide nav while dropdown is open
+  if (nav.getAttribute('data-menu-open') === 'true') {
+    lastScrollY = currentY;
+    return;
+  }
 
   // Always show nav at the top of the page
   if (currentY <= scrollThreshold) {
@@ -83,12 +99,16 @@ function onNativeScroll() {
 
 export function initNavScrollHide(scope) {
   scope = scope || document;
-  nav = scope.querySelector('.nav');
+  nav = scope.querySelector('[data-menu-wrap]') || scope.querySelector('.nav');
   if (!nav) return;
 
   // Reset state
   lastScrollY = window.scrollY;
   isHidden = false;
+  isScrolled = false;
+
+  // Set initial scrolled state
+  nav.setAttribute('data-nav-scrolled', window.scrollY > shrinkThreshold ? 'true' : 'false');
 
   // Clear any leftover transforms from previous page
   if (typeof gsap !== 'undefined') {
@@ -100,11 +120,10 @@ export function initNavScrollHide(scope) {
   navResizeObserver = new ResizeObserver(setNavHeightVar);
   navResizeObserver.observe(nav);
 
-  // Hook into Lenis if available (exposed as module-level `lenis` in transitions.js)
+  // Hook into Lenis if available
   if (window.__shrinkLenis) {
     window.__shrinkLenis.on('scroll', onScroll);
   } else {
-    // Fallback to native scroll
     nativeHandler = onNativeScroll;
     window.addEventListener('scroll', nativeHandler, { passive: true });
   }
@@ -145,5 +164,6 @@ export function destroyNavScrollHide() {
 
   nav = null;
   isHidden = false;
+  isScrolled = false;
   lastScrollY = 0;
 }

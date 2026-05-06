@@ -30,6 +30,8 @@ import { initDitherBackground, destroyDitherBackground } from './dither-backgrou
 import { initContentReveal, destroyContentReveal } from './content-reveal.js';
 import { initSplitText, destroySplitText } from './split-text.js';
 import { initDotField, destroyDotField } from './dot-field.js';
+import { initMegaNav, destroyMegaNav } from './mega-nav.js';
+import { initNavTheme, destroyNavTheme } from './nav-theme.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -103,13 +105,16 @@ function initBeforeEnterFunctions(next) {
   destroyContentReveal();
   destroySplitText();
   destroyDotField();
+  destroyMegaNav();
+  destroyNavTheme();
 }
 
 function initAfterEnterFunctions(next) {
   nextPage = next || document;
 
   // Nav is inside the barba container — scope to document so we find it after transition
-  if (document.querySelector('.nav'))               initNavScrollHide(document);
+  if (document.querySelector('[data-menu-wrap]') || document.querySelector('.nav'))
+                                                    initNavScrollHide(document);
   if (has('[data-theme-toggle]'))                   initThemeToggle(nextPage);
   if (has('details'))                               initAccordions(nextPage);
   if (has('[data-tabs-component]'))                 initTabs(nextPage);
@@ -135,6 +140,8 @@ function initAfterEnterFunctions(next) {
   if (has('[data-reveal-group]'))                   initContentReveal(nextPage);
   if (has('[data-split="heading"]'))                initSplitText(nextPage);
   if (has('[data-dot-field]'))                      initDotField(nextPage);
+  if (has('[data-menu-wrap]'))                      initMegaNav(nextPage);
+  if (has('[data-section-theme]'))                  initNavTheme(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
