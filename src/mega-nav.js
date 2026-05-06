@@ -379,9 +379,6 @@ export function initMegaNav(scope) {
     if (burger) burger.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
 
-    // Stretch nav to full viewport so absolute children fill the screen
-    gsap.set(menuWrap, { bottom: 0, clearProps: 'transform' });
-
     const items = getNavItems();
     const tl = gsap.timeline();
     state.mobileTl = tl;
@@ -413,8 +410,6 @@ export function initMegaNav(scope) {
       onComplete() {
         document.body.style.overflow = '';
         state.mobileTl = null;
-        // Restore nav to bar-only height
-        gsap.set(menuWrap, { clearProps: 'bottom' });
         setupMobile();
       },
     });
@@ -528,7 +523,6 @@ export function initMegaNav(scope) {
 
       if (was && !state.isMobile) {
         killMobile(); killMobilePanel();
-        gsap.set(menuWrap, { clearProps: 'bottom' });
         gsap.set(navList, { clearProps: 'all' });
         gsap.set(getNavItems(), { clearProps: 'all' });
         if (backBtn) gsap.set(backBtn, { autoAlpha: 0 });
