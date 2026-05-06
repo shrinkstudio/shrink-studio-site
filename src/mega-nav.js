@@ -118,6 +118,7 @@ export function initMegaNav(scope) {
     if (backBtn) gsap.set(backBtn, { autoAlpha: 0 });
     if (logo) gsap.set(logo, { autoAlpha: 1 });
     gsap.set(dropContainer, { clearProps: 'height' });
+    gsap.set(dropWrapper, { autoAlpha: 0, pointerEvents: 'none' });
     gsap.set(backdrop, { autoAlpha: 0 });
   }
 
@@ -417,6 +418,7 @@ export function initMegaNav(scope) {
 
     if (hadPanel && panelEl) {
       tl.to(panelEl, { autoAlpha: 0, duration: 0.3, ease: 'power2.inOut' }, 0.05);
+      tl.set(dropWrapper, { autoAlpha: 0, pointerEvents: 'none' }, 0.35);
       if (backBtn) tl.to(backBtn, { autoAlpha: 0, duration: 0.2, ease: 'power2.in' }, 0.05);
     }
 
@@ -432,6 +434,9 @@ export function initMegaNav(scope) {
 
     const navItems = getNavItems();
     const panelFade = getFade(el);
+
+    // Show the dropdown wrapper so panels are visible
+    gsap.set(dropWrapper, { autoAlpha: 1, pointerEvents: 'auto' });
 
     const tl = gsap.timeline();
     state.mobilePanelTl = tl;
@@ -466,7 +471,12 @@ export function initMegaNav(scope) {
     const panelFade = getFade(el);
 
     const tl = gsap.timeline({
-      onComplete() { state.mobilePanelActive = null; state.mobilePanelTl = null; },
+      onComplete() {
+        state.mobilePanelActive = null;
+        state.mobilePanelTl = null;
+        // Hide dropdown wrapper when panel closes
+        gsap.set(dropWrapper, { autoAlpha: 0, pointerEvents: 'none' });
+      },
     });
     state.mobilePanelTl = tl;
 
@@ -528,6 +538,7 @@ export function initMegaNav(scope) {
           gsap.set(p, { clearProps: 'all' });
           gsap.set(getFade(p), { clearProps: 'all' });
         });
+        gsap.set(dropWrapper, { clearProps: 'all' });
         gsap.set(dropContainer, { clearProps: 'all' });
         gsap.set(backdrop, { clearProps: 'all' });
         resetDesktop();
@@ -592,6 +603,7 @@ export function initMegaNav(scope) {
       gsap.set(p, { clearProps: 'all' });
       gsap.set(getFade(p), { clearProps: 'all' });
     });
+    gsap.set(dropWrapper, { clearProps: 'all' });
     gsap.set(dropContainer, { clearProps: 'all' });
     gsap.set(backdrop, { clearProps: 'all' });
     gsap.set(navList, { clearProps: 'all' });
