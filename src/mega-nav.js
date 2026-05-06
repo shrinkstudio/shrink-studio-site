@@ -383,12 +383,13 @@ export function initMegaNav(scope) {
     const tl = gsap.timeline();
     state.mobileTl = tl;
     tl.add(animateBurger(true), 0);
-    tl.to(navList, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' }, 0);
+    // Snap background in, then stagger items (no double-fade)
+    tl.set(navList, { autoAlpha: 1 }, 0);
     if (items.length) {
       tl.fromTo(items,
-        { autoAlpha: 0, y: 12 },
-        { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.04, ease: 'power3.out' },
-        0.15
+        { autoAlpha: 0, y: 16 },
+        { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power3.out' },
+        0.1
       );
     }
   }
@@ -422,7 +423,7 @@ export function initMegaNav(scope) {
       if (backBtn) tl.to(backBtn, { autoAlpha: 0, duration: 0.2, ease: 'power2.in' }, 0.05);
     }
 
-    tl.to(navList, { autoAlpha: 0, duration: 0.3, ease: 'power2.inOut' }, 0.05);
+    tl.set(navList, { autoAlpha: 0 }, 0.35);
   }
 
   // MOBILE — slide-over panels
