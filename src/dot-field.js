@@ -49,6 +49,8 @@ function createInstance(el) {
     gradientFrom:  d.dotFrom                     || 'rgba(168, 85, 247, 0.35)',
     gradientTo:    d.dotTo                       || 'rgba(180, 151, 207, 0.25)',
     glowColor:     d.dotGlowColor                || '#120F17',
+    fadeTop:       parseFloat(d.dotFadeTop)      || 0,
+    fadeBottom:    parseFloat(d.dotFadeBottom)    || 0,
   };
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -89,6 +91,17 @@ function createInstance(el) {
   el.style.overflow = 'hidden';
   el.insertBefore(svg, el.firstChild);
   el.insertBefore(canvas, el.firstChild);
+
+  // Edge fade via CSS mask
+  if (cfg.fadeTop > 0 || cfg.fadeBottom > 0) {
+    const top = cfg.fadeTop * 100;
+    const bottom = cfg.fadeBottom * 100;
+    const mask = `linear-gradient(to bottom, transparent 0%, black ${top}%, black ${100 - bottom}%, transparent 100%)`;
+    canvas.style.maskImage = mask;
+    canvas.style.webkitMaskImage = mask;
+    svg.style.maskImage = mask;
+    svg.style.webkitMaskImage = mask;
+  }
 
   const ctx = canvas.getContext('2d', { alpha: true });
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
