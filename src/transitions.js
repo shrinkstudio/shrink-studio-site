@@ -178,95 +178,59 @@ function runPageOnceAnimation(next) {
 
 function runPageLeaveAnimation(current, next) {
   const transitionWrap = document.querySelector("[data-transition-wrap]");
-  const transitionDark = transitionWrap ? transitionWrap.querySelector("[data-transition-dark]") : null;
+  const transitionPanel = transitionWrap ? transitionWrap.querySelector("[data-transition-panel]") : null;
+  const transitionLabel = transitionWrap ? transitionWrap.querySelector("[data-transition-label]") : null;
+  const transitionLabelText = transitionWrap ? transitionWrap.querySelector("[data-transition-label-text]") : null;
 
-  // Capture scroll position and reset
-  const scrollY = window.scrollY || 0;
-  window.scrollTo(0, 0);
-
-  // Position current page fixed at scroll offset
-  gsap.set(current, {
-    position: "fixed",
-    top: -scrollY,
-    left: 0,
-    width: "100%",
-    zIndex: 1,
-    willChange: "transform",
-  });
-
-  // Show transition overlay between current and next
-  if (transitionWrap) {
-    gsap.set(transitionWrap, {
-      autoAlpha: 1,
-      pointerEvents: "auto",
-      zIndex: 2,
-    });
-  }
-
-  if (transitionDark) {
-    gsap.set(transitionDark, { opacity: 0 });
-  }
-
-  // Position new page below
-  gsap.set(next, {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    zIndex: 3,
-    willChange: "transform",
-    y: "100vh",
-  });
+  const nextPageName = next.getAttribute("data-page-name");
+  if (transitionLabelText) transitionLabelText.innerText = nextPageName || "Hi there";
 
   const tl = gsap.timeline({
     onComplete: () => {
-      // Clean up current page
-      gsap.set(current, { autoAlpha: 0 });
-
-      // Hide transition overlay
-      if (transitionWrap) {
-        gsap.set(transitionWrap, { autoAlpha: 0, pointerEvents: "none", zIndex: -1 });
-      }
-      if (transitionDark) {
-        gsap.set(transitionDark, { clearProps: "opacity" });
-      }
-
-      // Clear transforms on next page
-      gsap.set(next, { clearProps: "position,top,left,width,zIndex,willChange,y" });
-    },
+      current.remove();
+    }
   });
 
   if (reducedMotion) {
     return tl.set(current, { autoAlpha: 0 });
   }
 
-  // Current page slides up (parallax — shorter distance)
-  tl.to(current, {
-    y: "-25vh",
-    duration: 1.2,
-    ease: "parallax",
+  tl.set(transitionPanel, {
+    autoAlpha: 1
   }, 0);
 
-  // Dark overlay fades in over current page
-  if (transitionDark) {
-    tl.to(transitionDark, {
-      opacity: 0.8,
-      duration: 1.2,
-      ease: "parallax",
-    }, 0);
-  }
+  tl.set(next, {
+    autoAlpha: 0
+  }, 0);
 
-  // New page slides up from below
-  tl.to(next, {
-    y: "0vh",
-    duration: 1.2,
-    ease: "parallax",
+  tl.fromTo(transitionPanel, {
+    yPercent: 0
+  }, {
+    yPercent: -100,
+    duration: 0.8,
+  }, 0);
+
+  tl.fromTo(transitionLabel, {
+    autoAlpha: 0
+  }, {
+    autoAlpha: 1
+  }, "<+=0.2");
+
+  tl.fromTo(current, {
+    y: "0vh"
+  }, {
+    y: "-15vh",
+    duration: 0.8,
   }, 0);
 
   return tl;
 }
 
 function runPageEnterAnimation(next) {
+  const transitionWrap = document.querySelector("[data-transition-wrap]");
+  const transitionPanel = transitionWrap ? transitionWrap.querySelector("[data-transition-panel]") : null;
+  const transitionLabel = transitionWrap ? transitionWrap.querySelector("[data-transition-label]") : null;
+
   const tl = gsap.timeline();
 
   if (reducedMotion) {
@@ -276,8 +240,41 @@ function runPageEnterAnimation(next) {
     return new Promise(resolve => tl.call(resolve, null, "pageReady"));
   }
 
-  // Leave animation handles everything in sync mode
+  tl.add("startEnter", 1.25);
+
+  tl.set(next, {
+    autoAlpha: 1,
+  }, "startEnter");
+
+  tl.fromTo(transitionPanel, {
+    yPercent: -100,
+  }, {
+    yPercent: -200,
+    duration: 1,
+    overwrite: "auto",
+    immediateRender: false
+  }, "startEnter");
+
+  tl.set(transitionPanel, {
+    autoAlpha: 0
+  }, ">");
+
+  tl.fromTo(transitionLabel, {
+    autoAlpha: 1
+  }, {
+    autoAlpha: 0,
+    duration: 0.4,
+    overwrite: "auto",
+    immediateRender: false
+  }, "startEnter+=0.1");
+
+  tl.from(next, {
+    y: "15vh",
+    duration: 1,
+  }, "startEnter");
+
   tl.add("pageReady");
+  tl.call(resetPage, [next], "pageReady");
 
   return new Promise(resolve => {
     tl.call(resolve, null, "pageReady");
