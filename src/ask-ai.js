@@ -13,7 +13,7 @@ const TOOLS = {
   perplexity: { mode: "link", url: "https://www.perplexity.ai/search/new?q=" },
   copilot:    { mode: "link", url: "https://copilot.microsoft.com/?q=" },
   claude:     { mode: "link", url: "https://claude.ai/new?q=" },
-  gemini:     { mode: "copy", url: "https://gemini.google.com/app" },
+  gemini:     { mode: "link", url: "https://www.google.com/search?udm=50&aep=11&q=" },
 };
 
 let listeners = [];
