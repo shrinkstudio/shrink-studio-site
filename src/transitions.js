@@ -32,6 +32,8 @@ import { initSplitText, destroySplitText } from './split-text.js';
 import { initDotField, destroyDotField } from './dot-field.js';
 import { initMegaNav, destroyMegaNav } from './mega-nav.js';
 import { initNavTheme, destroyNavTheme } from './nav-theme.js';
+import { initProjectsListing, destroyProjectsListing } from './projects-listing.js';
+import { initAskAI, destroyAskAI } from './ask-ai.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -107,6 +109,8 @@ function initBeforeEnterFunctions(next) {
   destroyDotField();
   destroyMegaNav();
   destroyNavTheme();
+  destroyProjectsListing();
+  destroyAskAI();
 }
 
 function initAfterEnterFunctions(next) {
@@ -143,6 +147,8 @@ function initAfterEnterFunctions(next) {
   if (has('[data-menu-wrap]'))                      initMegaNav(nextPage);
   if (has('[data-section-theme]'))                  initNavTheme(nextPage);
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
+  if (has('.projects-listing__item'))               initProjectsListing(nextPage);
+  if (has('[data-ask-ai]'))                         initAskAI(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
   reinitScripts(nextPage);
