@@ -10,9 +10,9 @@ const FALLBACK_PROMPT = "I'm evaluating Shrink Studio (https://shrink.studio) as
 
 const TOOLS = {
   chatgpt:    { mode: "link", url: "https://chatgpt.com/?q=" },
-  perplexity: { mode: "link", url: "https://www.perplexity.ai/search?q=" },
+  perplexity: { mode: "link", url: "https://www.perplexity.ai/search/new?q=" },
   copilot:    { mode: "link", url: "https://copilot.microsoft.com/?q=" },
-  claude:     { mode: "copy", url: "https://claude.ai/new" },
+  claude:     { mode: "link", url: "https://claude.ai/new?q=" },
   gemini:     { mode: "copy", url: "https://gemini.google.com/app" },
 };
 
