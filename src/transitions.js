@@ -34,6 +34,7 @@ import { initMegaNav, destroyMegaNav } from './mega-nav.js';
 import { initNavTheme, destroyNavTheme } from './nav-theme.js';
 import { initProjectsListing, destroyProjectsListing } from './projects-listing.js';
 import { initAskAI, destroyAskAI } from './ask-ai.js';
+import { initTOC, destroyTOC } from './toc.js';
 
 gsap.registerPlugin(CustomEase);
 if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
@@ -111,6 +112,7 @@ function initBeforeEnterFunctions(next) {
   destroyNavTheme();
   destroyProjectsListing();
   destroyAskAI();
+  destroyTOC();
 }
 
 function initAfterEnterFunctions(next) {
@@ -149,6 +151,7 @@ function initAfterEnterFunctions(next) {
   if (has('[data-footer-year]'))                    initFooterYear(nextPage);
   if (has('.projects-listing__item'))               initProjectsListing(nextPage);
   if (has('[data-ask-ai]'))                         initAskAI(nextPage);
+  if (has('[data-toc-list]'))                       initTOC(nextPage);
 
   // Re-evaluate inline scripts inside the new container (Webflow embeds)
   reinitScripts(nextPage);
